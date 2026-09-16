@@ -287,6 +287,51 @@
     </div>
   </section>
 
+  <!-- SECCIÓN GALERÍA DE FOTOS (TRABAJO REAL) -->
+  <section class="py-14 bg-brand-surface/40 border-b border-brand-border/60">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="text-xs uppercase font-bold tracking-[0.25em] text-brand-gold">
+        Instalaciones & Mantenimiento In Situ
+      </span>
+      <h2 class="text-2xl sm:text-3xl font-serif text-white mt-1 mb-8">
+        Trabajo real, resultados reales
+      </h2>
+
+      <!-- Slider Container -->
+      <div id="gallerySlider" class="relative w-full max-w-4xl mx-auto h-64 sm:h-96 md:h-[440px] rounded-2xl overflow-hidden border border-brand-border/80 shadow-2xl bg-brand-black group">
+        <!-- Foto 1 (Carga estándar) -->
+        <div class="gallery-slide absolute inset-0 opacity-100 transition-opacity duration-700 ease-in-out">
+          <img src="images/foto1.jpg" alt="Trabajo real MG Climatización - Foto 1" class="w-full h-full object-cover select-none">
+        </div>
+        <!-- Foto 2 (Lazy) -->
+        <div class="gallery-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out">
+          <img src="images/foto2.jpg" loading="lazy" alt="Trabajo real MG Climatización - Foto 2" class="w-full h-full object-cover select-none">
+        </div>
+        <!-- Foto 3 (Lazy) -->
+        <div class="gallery-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out">
+          <img src="images/foto3.jpg" loading="lazy" alt="Trabajo real MG Climatización - Foto 3" class="w-full h-full object-cover select-none">
+        </div>
+        <!-- Foto 4 (Lazy) -->
+        <div class="gallery-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out">
+          <img src="images/foto4.jpg" loading="lazy" alt="Trabajo real MG Climatización - Foto 4" class="w-full h-full object-cover select-none">
+        </div>
+        <!-- Foto 5 (Lazy) -->
+        <div class="gallery-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out">
+          <img src="images/foto5.jpg" loading="lazy" alt="Trabajo real MG Climatización - Foto 5" class="w-full h-full object-cover select-none">
+        </div>
+      </div>
+
+      <!-- Indicadores de puntos -->
+      <div id="galleryIndicators" class="flex justify-center items-center gap-2 mt-5">
+        <button type="button" class="slider-dot w-6 h-2 rounded-full bg-brand-gold transition-all duration-300 cursor-pointer" aria-label="Ir a foto 1"></button>
+        <button type="button" class="slider-dot w-2 h-2 rounded-full bg-brand-border hover:bg-slate-400 transition-all duration-300 cursor-pointer" aria-label="Ir a foto 2"></button>
+        <button type="button" class="slider-dot w-2 h-2 rounded-full bg-brand-border hover:bg-slate-400 transition-all duration-300 cursor-pointer" aria-label="Ir a foto 3"></button>
+        <button type="button" class="slider-dot w-2 h-2 rounded-full bg-brand-border hover:bg-slate-400 transition-all duration-300 cursor-pointer" aria-label="Ir a foto 4"></button>
+        <button type="button" class="slider-dot w-2 h-2 rounded-full bg-brand-border hover:bg-slate-400 transition-all duration-300 cursor-pointer" aria-label="Ir a foto 5"></button>
+      </div>
+    </div>
+  </section>
+
   <!-- SECCIÓN CLIENTES QUE CONFÍAN EN NOSOTROS -->
   <section class="py-12 bg-brand-dark border-b border-brand-border/60">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -305,7 +350,7 @@
         <img 
           src="logos/Senasa_Logo_White.svg" 
           alt="Logo Senasa" 
-          class="h-6 sm:h-8 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300 select-none"
+          class="h-7 sm:h-9 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300 select-none"
         >
         <div class="w-1.5 h-1.5 rounded-full bg-brand-gold/40 hidden sm:block"></div>
         <img 
@@ -815,6 +860,70 @@
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
     });
+
+    (function initGallerySlider() {
+      const slider = document.getElementById('gallerySlider');
+      if (!slider) return;
+
+      const slides = slider.querySelectorAll('.gallery-slide');
+      const dots = document.querySelectorAll('#galleryIndicators .slider-dot');
+      let currentIndex = 0;
+      let timer = null;
+      const intervalTime = 3000;
+
+      function showSlide(index) {
+        slides.forEach((slide, idx) => {
+          if (idx === index) {
+            slide.classList.remove('opacity-0', 'pointer-events-none');
+            slide.classList.add('opacity-100');
+          } else {
+            slide.classList.remove('opacity-100');
+            slide.classList.add('opacity-0', 'pointer-events-none');
+          }
+        });
+
+        dots.forEach((dot, idx) => {
+          if (idx === index) {
+            dot.classList.remove('bg-brand-border', 'w-2');
+            dot.classList.add('bg-brand-gold', 'w-6');
+          } else {
+            dot.classList.remove('bg-brand-gold', 'w-6');
+            dot.classList.add('bg-brand-border', 'w-2');
+          }
+        });
+
+        currentIndex = index;
+      }
+
+      function nextSlide() {
+        const nextIndex = (currentIndex + 1) % slides.length;
+        showSlide(nextIndex);
+      }
+
+      function startAutoplay() {
+        stopAutoplay();
+        timer = setInterval(nextSlide, intervalTime);
+      }
+
+      function stopAutoplay() {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }
+
+      slider.addEventListener('mouseenter', stopAutoplay);
+      slider.addEventListener('mouseleave', startAutoplay);
+
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+          showSlide(idx);
+          startAutoplay();
+        });
+      });
+
+      startAutoplay();
+    })();
 
     // Reemplazo seguro de alertas nativas (No alert())
     function showCustomNotice(message) {
